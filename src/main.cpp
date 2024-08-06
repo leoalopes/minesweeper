@@ -1,7 +1,6 @@
-#include "game.cpp"
+#include "game.h"
 
 int main() {
     Game game(Intermediate);
     game.debugField();
-    system("pause");
 }

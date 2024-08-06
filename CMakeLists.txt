@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.30)
+cmake_minimum_required(VERSION 3.24)
 
 project(MineSweeper VERSION 1.0 LANGUAGES CXX)
 
@@ -13,7 +13,11 @@ if(NOT DEFINED CMAKE_EXPORT_COMPILE_COMMANDS)
 endif()
 
 set(CMAKE_GENERATOR "Unix Makefiles")
-set(CMAKE_C_COMPILER "clang")
-set(CMAKE_CXX_COMPILER "clang++")
+set(CMAKE_C_COMPILER "gcc")
+set(CMAKE_CXX_COMPILER "g++")
 
-add_executable(minesweeper src/field.cpp src/game.cpp src/main.cpp)
+add_library(core STATIC src/core/field.cpp src/core/game.cpp)
+target_include_directories(core PUBLIC src/core)
+
+add_executable(minesweeper src/main.cpp)
+target_link_libraries(minesweeper core)

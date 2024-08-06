@@ -12,7 +12,7 @@ class Game {
     void debugField();
 
   private:
-    int getSize();
+    int getSize(Difficulty difficulty);
 
-    int getBombQuantity();
+    int getBombQuantity(Difficulty difficulty);
 };
