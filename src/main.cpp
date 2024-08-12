@@ -1,6 +1,12 @@
-#include "game.h"
+#include "core/game_manager.hpp"
+#include "ui/cli.hpp"
 
 int main() {
-    Game game(Intermediate);
-    game.debugField();
+    Cli cliUi;
+    GameManager gameManager(&cliUi);
+
+    while (gameManager.shouldStartNewGame()) {
+        gameManager.startGame();
+        gameManager.printField();
+    }
 }

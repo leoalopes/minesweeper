@@ -1,32 +1,69 @@
-#include "game.h"
-#include "field.h"
+#include "game.hpp"
+#include "field.hpp"
+#include <stdexcept>
 
-Game::Game(Difficulty difficulty)
-    : field(getSize(difficulty), getBombQuantity(difficulty)) {}
+Game::Game(int size, int bombs) {
+    this->size = size;
+    this->bombs = bombs;
+    initialize();
+}
+Game::~Game() { delete field; }
 
-void Game::debugField() { field.debugField(); }
+/*
+ * Initialize internal game control variables
+ */
+void Game::initialize() {
+    hiddenBlocks = size * size - bombs;
+    victory = false;
+    gameOver = false;
+    field = new Field(size, bombs);
+}
 
-int Game::getSize(Difficulty difficulty) {
-    switch (difficulty) {
-    case Extreme:
-        return 100;
-    case Hard:
-        return 50;
-    case Intermediate:
-        return 20;
-    default:
-        return 10;
+/*
+ * Getters
+ */
+int Game::getSize() { return size; }
+int Game::getBombs() { return bombs; }
+bool Game::isVictory() { return victory; }
+bool Game::isGameOver() { return gameOver; }
+Field *Game::getField() { return field; }
+
+/*
+ * Actions
+ */
+void Game::flagBlock(int row, int column) {
+    if (gameOver) {
+        throw std::runtime_error("Game over!");
+    }
+
+    bool isRevealed = field->isBlockVisible(row, column);
+    if (!isRevealed) {
+        field->flagBlock(row, column);
+        flaggedBombs++;
     }
 }
-int Game::getBombQuantity(Difficulty difficulty) {
-    switch (difficulty) {
-    case Extreme:
-        return 40;
-    case Hard:
-        return 20;
-    case Intermediate:
-        return 5;
-    default:
-        return 3;
+
+void Game::revealBlock(int row, int column) {
+    if (gameOver) {
+        throw std::runtime_error("Game over!");
+    }
+
+    bool isFlagged = field->isBlockFlagged(row, column);
+    field->revealBlock(row, column);
+    if (isFlagged) {
+        flaggedBombs--;
+    }
+
+    bool isBomb = field->isBlockBomb(row, column);
+    if (isBomb) {
+        victory = false;
+        gameOver = true;
+        return;
+    }
+
+    hiddenBlocks--;
+    if (hiddenBlocks <= 0) {
+        victory = true;
+        gameOver = true;
     }
 }

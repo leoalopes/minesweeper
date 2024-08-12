@@ -1,53 +1,53 @@
-#include "field.h"
-#include <iostream>
+#include "field.hpp"
+#include <cstdlib>
+#include <stdexcept>
 
-Field::Field(int s, int b) {
-    size = s;
-    bombQuantity = b;
+Field::Field(int size, int bombs) {
+    this->size = size;
+    this->bombs = bombs;
     initialize();
-    generateBombs();
-    updateField();
 }
-
-void Field::debugField() {
+Field::~Field() {
     for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            std::cout << field[i][j] << " ";
-        }
-        std::cout << std::endl;
+        delete[] values[i];
+        delete[] visibility[i];
     }
+    delete[] values;
+    delete[] visibility;
 }
 
+/*
+ * Initialize field state
+ */
 void Field::initialize() {
-    field = new int *[size];
-    visible = new bool *[size];
-    for (int i = 0; i < size; i++) {
-        field[i] = new int[size];
-        visible[i] = new bool[size];
-        for (int j = 0; j < size; j++) {
-            field[i][j] = 0;
-            visible[i][j] = false;
+    values = new int *[size];
+    visibility = new int *[size];
+    for (int row = 0; row < size; row++) {
+        values[row] = new int[size];
+        visibility[row] = new int[size];
+        for (int column = 0; column < size; column++) {
+            values[row][column] = 0;
+            visibility[row][column] = 0;
         }
     }
+
+    spreadBombs();
 }
 
-int Field::getRandomNumber() { return rand() % 100 + 1; }
+void Field::spreadBombs() {
+    int bombsLeft = bombs;
+    while (bombsLeft > 0) {
+        for (int row = 0; row < size; row++) {
+            for (int column = 0; column < size; column++) {
+                if (values[row][column] != -1) {
+                    if (shouldAddBomb()) {
+                        values[row][column] = -1;
+                        incrementAround(row, column);
 
-void Field::generateBombs() {
-    while (bombQuantity > 0) {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                if (field[i][j] == -1) {
-                    continue;
-                }
-
-                int randomNumber = getRandomNumber();
-                bool shouldAddBomb = randomNumber % 20 == 0;
-                if (shouldAddBomb) {
-                    field[i][j] = -1;
-                    bombQuantity--;
-                    if (bombQuantity == 0) {
-                        break;
+                        bombsLeft--;
+                        if (bombsLeft <= 0) {
+                            return;
+                        }
                     }
                 }
             }
@@ -55,42 +55,134 @@ void Field::generateBombs() {
     }
 }
 
-void Field::updateField() {
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            if (field[i][j] != -1) {
-                if (i > 0 && j > 0 && field[i - 1][j - 1] == -1) {
-                    field[i][j] += 1;
-                }
+bool Field::shouldAddBomb() { return (rand() % 100 + 1) <= 20; }
 
-                if (i < size - 1 && j < size - 1 && field[i + 1][j + 1] == -1) {
-                    field[i][j] += 1;
-                }
+void Field::incrementAround(int row, int column) {
+    // Up
+    if (row > 0 && values[row - 1][column] != -1) {
+        values[row - 1][column] += 1;
+    }
 
-                if (i > 0 && j < size - 1 && field[i - 1][j + 1] == -1) {
-                    field[i][j] += 1;
-                }
+    // Down
+    if (row < size - 1 && values[row + 1][column] != -1) {
+        values[row + 1][column] += 1;
+    }
 
-                if (i < size - 1 && j > 0 && field[i + 1][j - 1] == -1) {
-                    field[i][j] += 1;
-                }
+    // Left
+    if (row > 0 && values[row][column - 1] != -1) {
+        values[row][column - 1] += 1;
+    }
 
-                if (i > 0 && field[i - 1][j] == -1) {
-                    field[i][j] += 1;
-                }
+    // Right
+    if (row < size - 1 && values[row][column + 1] != -1) {
+        values[row][column + 1] += 1;
+    }
 
-                if (i < size - 1 && field[i + 1][j] == -1) {
-                    field[i][j] += 1;
-                }
+    // UpLeft
+    if (row > 0 && column > 0 && values[row - 1][column - 1] != -1) {
+        values[row - 1][column - 1] += 1;
+    }
 
-                if (j > 0 && field[i][j - 1] == -1) {
-                    field[i][j] += 1;
-                }
+    // UpRight
+    if (row > 0 && column < size - 1 && values[row - 1][column + 1] != -1) {
+        values[row - 1][column + 1] += 1;
+    }
 
-                if (j < size - 1 && field[i][j + 1] == -1) {
-                    field[i][j] += 1;
-                }
-            }
-        }
+    // DownLeft
+    if (row < size - 1 && column > 0 && values[row + 1][column - 1] != -1) {
+        values[row + 1][column - 1] += 1;
+    }
+
+    // DownRight
+    if (row < size - 1 && column < size - 1 &&
+        values[row + 1][column + 1] != -1) {
+        values[row + 1][column + 1] += 1;
     }
 }
+
+void Field::revealCascade(int row, int column) {
+    visibility[row][column] = 1;
+    if (values[row][column] != 0) {
+        return;
+    }
+
+    // Up
+    if (row > 0 && visibility[row - 1][column] == 0) {
+        revealCascade(row - 1, column);
+    }
+
+    // Down
+    if (row < size - 1 && visibility[row + 1][column] == 0) {
+        revealCascade(row + 1, column);
+    }
+
+    // Left
+    if (row > 0 && visibility[row][column - 1] == 0) {
+        revealCascade(row, column - 1);
+    }
+
+    // Right
+    if (row < size - 1 && visibility[row][column + 1] == 0) {
+        revealCascade(row, column + 1);
+    }
+}
+
+/*
+ * Getters
+ */
+int Field::getSize() { return size; }
+int Field::getBombs() { return bombs; }
+
+bool Field::isBlockBomb(int row, int column) {
+    if (visibility[row][column] != 1) {
+        throw std::runtime_error("Block is not visible!");
+    }
+
+    return values[row][column] == -1;
+}
+
+bool Field::isBlockFlagged(int row, int column) {
+    return visibility[row][column] == -1;
+}
+
+bool Field::isBlockVisible(int row, int column) {
+    return visibility[row][column] == 1;
+}
+
+int Field::getBlockValue(int row, int column) {
+    if (visibility[row][column] != 1) {
+        throw std::runtime_error("Block is not visible!");
+    }
+
+    return values[row][column];
+}
+
+/*
+ * Actions
+ */
+void Field::flagBlock(int row, int column) {
+    if (visibility[row][column] == 1) {
+        throw std::runtime_error("Block is visible!");
+    }
+
+    visibility[row][column] = -1;
+}
+
+void Field::revealBlock(int row, int column) { visibility[row][column] = 1; }
+
+/*std::string Field::getSquare(int i, int j) {*/
+/*    if (visible[i][j] == 0) {*/
+/*        return "";*/
+/*    }*/
+/*    if (visible[i][j] == 2) {*/
+/*        return "󰉀";*/
+/*    }*/
+/**/
+/*    if (field[i][j] == -1) {*/
+/*        return "󰚑";*/
+/*    }*/
+/*    if (field[i][j] == 0) {*/
+/*        return " ";*/
+/*    }*/
+/*    return std::to_string(field[i][j]);*/
+/*}*/

@@ -16,8 +16,11 @@ set(CMAKE_GENERATOR "Unix Makefiles")
 set(CMAKE_C_COMPILER "gcc")
 set(CMAKE_CXX_COMPILER "g++")
 
-add_library(core STATIC src/core/field.cpp src/core/game.cpp)
+add_library(core STATIC src/core/field.cpp src/core/game.cpp src/core/game_manager.cpp)
 target_include_directories(core PUBLIC src/core)
 
+add_library(ui STATIC src/ui/cli.cpp)
+target_include_directories(ui PUBLIC src/ui)
+
 add_executable(minesweeper src/main.cpp)
-target_link_libraries(minesweeper core)
+target_link_libraries(minesweeper core ui)
