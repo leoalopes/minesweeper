@@ -49,8 +49,7 @@ void GameManager::performGameAction(GameAction action) {
         return;
     }
 
-    int column = ui->readColumn();
-    int row = ui->readRow();
+    auto [column, row] = ui->readCoordinates();
 
     if (row < 0 || row >= gameInstance->getSize() || column < 0 ||
         column >= gameInstance->getSize()) {

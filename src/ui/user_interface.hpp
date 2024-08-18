@@ -1,5 +1,6 @@
 #pragma once
 #include "../core/game.hpp"
+#include <array>
 #include <string>
 
 enum class MenuAction { Play, Quit };
@@ -15,8 +16,7 @@ class UserInterface {
     virtual Difficulty readDifficulty() = 0;
     virtual GameAction readGameAction(Game *gameInstance) = 0;
 
-    virtual int readRow() = 0;
-    virtual int readColumn() = 0;
+    virtual std::array<int, 2> readCoordinates() = 0;
 
     virtual bool askConfirmation(std::string message) = 0;
 };

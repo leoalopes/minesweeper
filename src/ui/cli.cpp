@@ -176,17 +176,10 @@ GameAction Cli::readGameAction(Game *gameInstance) {
     return GameAction::Stop;
 }
 
-int Cli::readRow() {
-    std::cout << "Choose row: ";
-    int row = readNumberInput(0);
-
-    return row - 1;
-}
-
-int Cli::readColumn() {
+std::array<int, 2> Cli::readCoordinates() {
     std::string input;
 
-    std::cout << "Choose column: ";
+    std::cout << "Choose coordinates: ";
     std::cin >> input;
 
     std::string uppercaseAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -195,16 +188,25 @@ int Cli::readColumn() {
     std::size_t uppercaseMatch = uppercaseAlphabet.find(input.at(0));
     std::size_t lowercaseMatch = lowercaseAlphabet.find(input.at(0));
 
+    std::array<int, 2> coordinates({-1, -1});
     if (uppercaseMatch == std::string::npos &&
         lowercaseMatch == std::string::npos) {
-        return -1;
+        return coordinates;
     }
 
     if (uppercaseMatch != std::string::npos) {
-        return static_cast<int>(uppercaseMatch);
+        coordinates[0] = static_cast<int>(uppercaseMatch);
+    } else {
+        coordinates[0] = static_cast<int>(lowercaseMatch);
     }
 
-    return static_cast<int>(lowercaseMatch);
+    try {
+        coordinates[1] = std::stoi(input.substr(1)) - 1;
+    } catch (std::invalid_argument) {
+        coordinates[1] = -1;
+    }
+
+    return coordinates;
 }
 
 void Cli::printVictory(Game *gameInstance) {

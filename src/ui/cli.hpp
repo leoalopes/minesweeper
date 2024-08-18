@@ -26,8 +26,7 @@ class Cli : public UserInterface {
     Difficulty readDifficulty();
     GameAction readGameAction(Game *gameInstance);
 
-    int readRow();
-    int readColumn();
+    std::array<int, 2> readCoordinates();
 
     bool askConfirmation(std::string message);
 };
