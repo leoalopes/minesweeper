@@ -29,4 +29,6 @@ class Game {
 
     void flagBlock(int row, int column);
     void revealBlock(int row, int column);
+
+    bool isBlockFlagged(int row, int column);
 };

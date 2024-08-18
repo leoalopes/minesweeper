@@ -28,4 +28,6 @@ class Cli : public UserInterface {
 
     int readRow();
     int readColumn();
+
+    bool askConfirmation(std::string message);
 };

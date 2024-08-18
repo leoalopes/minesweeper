@@ -236,3 +236,16 @@ void Cli::printGameOver(Game *gameInstance) {
     std::cin.ignore();
     std::cin.get();
 }
+
+bool Cli::askConfirmation(std::string message) {
+    std::cout << message << " [y/n] ";
+
+    std::string input;
+    std::cin >> input;
+
+    if (input.at(0) == 'y') {
+        return true;
+    }
+
+    return false;
+}

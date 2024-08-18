@@ -58,8 +58,19 @@ void GameManager::performGameAction(GameAction action) {
     }
 
     if (action == GameAction::Reveal) {
+        bool isBlockFlagged = gameInstance->isBlockFlagged(row, column);
+        if (isBlockFlagged) {
+            bool shouldContinue =
+                ui->askConfirmation("The block selected is flagged as a bomb, "
+                                    "do you want to continue?");
+            if (!shouldContinue) {
+                return;
+            }
+        }
+
         gameInstance->revealBlock(row, column);
     }
+
     if (action == GameAction::Flag) {
         gameInstance->flagBlock(row, column);
     }

@@ -100,3 +100,7 @@ void Game::revealBlock(int row, int column) {
         gameOver = true;
     }
 }
+
+bool Game::isBlockFlagged(int row, int column) {
+    return field->isBlockFlagged(row, column);
+}
