@@ -21,6 +21,8 @@ class Game {
 
     int getSize();
     int getBombs();
+    int getFlaggedBombs();
+    int getHiddenBlocks();
     bool isVictory();
     bool isGameOver();
     Field *getField();

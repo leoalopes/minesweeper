@@ -13,8 +13,6 @@ class Field {
     bool shouldAddBomb();
     void incrementAround(int row, int column);
 
-    void revealCascade(int row, int column);
-
   public:
     Field(int size, int bombs);
     ~Field();
@@ -22,6 +20,7 @@ class Field {
     int getSize();
     int getBombs();
 
+    bool isBlockSafe(int row, int column);
     bool isBlockBomb(int row, int column);
     bool isBlockFlagged(int row, int column);
     bool isBlockVisible(int row, int column);
@@ -29,5 +28,5 @@ class Field {
     int getBlockValue(int row, int column);
 
     void flagBlock(int row, int column);
-    void revealBlock(int row, int column);
+    int revealBlock(int row, int column);
 };

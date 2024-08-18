@@ -55,7 +55,7 @@ void Field::spreadBombs() {
     }
 }
 
-bool Field::shouldAddBomb() { return (rand() % 100 + 1) <= 20; }
+bool Field::shouldAddBomb() { return (rand() % 100 + 1) <= 5; }
 
 void Field::incrementAround(int row, int column) {
     // Up
@@ -69,12 +69,12 @@ void Field::incrementAround(int row, int column) {
     }
 
     // Left
-    if (row > 0 && values[row][column - 1] != -1) {
+    if (column > 0 && values[row][column - 1] != -1) {
         values[row][column - 1] += 1;
     }
 
     // Right
-    if (row < size - 1 && values[row][column + 1] != -1) {
+    if (column < size - 1 && values[row][column + 1] != -1) {
         values[row][column + 1] += 1;
     }
 
@@ -100,41 +100,22 @@ void Field::incrementAround(int row, int column) {
     }
 }
 
-void Field::revealCascade(int row, int column) {
-    visibility[row][column] = 1;
-    if (values[row][column] != 0) {
-        return;
-    }
-
-    // Up
-    if (row > 0 && visibility[row - 1][column] == 0) {
-        revealCascade(row - 1, column);
-    }
-
-    // Down
-    if (row < size - 1 && visibility[row + 1][column] == 0) {
-        revealCascade(row + 1, column);
-    }
-
-    // Left
-    if (row > 0 && visibility[row][column - 1] == 0) {
-        revealCascade(row, column - 1);
-    }
-
-    // Right
-    if (row < size - 1 && visibility[row][column + 1] == 0) {
-        revealCascade(row, column + 1);
-    }
-}
-
 /*
  * Getters
  */
 int Field::getSize() { return size; }
 int Field::getBombs() { return bombs; }
 
+bool Field::isBlockSafe(int row, int column) {
+    if (!isBlockVisible(row, column)) {
+        throw std::runtime_error("Block is not visible!");
+    }
+
+    return values[row][column] == 0;
+}
+
 bool Field::isBlockBomb(int row, int column) {
-    if (visibility[row][column] != 1) {
+    if (!isBlockVisible(row, column)) {
         throw std::runtime_error("Block is not visible!");
     }
 
@@ -150,7 +131,7 @@ bool Field::isBlockVisible(int row, int column) {
 }
 
 int Field::getBlockValue(int row, int column) {
-    if (visibility[row][column] != 1) {
+    if (!isBlockVisible(row, column)) {
         throw std::runtime_error("Block is not visible!");
     }
 
@@ -161,28 +142,39 @@ int Field::getBlockValue(int row, int column) {
  * Actions
  */
 void Field::flagBlock(int row, int column) {
-    if (visibility[row][column] == 1) {
+    if (isBlockVisible(row, column)) {
         throw std::runtime_error("Block is visible!");
     }
 
     visibility[row][column] = -1;
 }
 
-void Field::revealBlock(int row, int column) { visibility[row][column] = 1; }
+int Field::revealBlock(int row, int column) {
+    visibility[row][column] = 1;
+    if (!isBlockSafe(row, column)) {
+        return 1;
+    }
 
-/*std::string Field::getSquare(int i, int j) {*/
-/*    if (visible[i][j] == 0) {*/
-/*        return "";*/
-/*    }*/
-/*    if (visible[i][j] == 2) {*/
-/*        return "󰉀";*/
-/*    }*/
-/**/
-/*    if (field[i][j] == -1) {*/
-/*        return "󰚑";*/
-/*    }*/
-/*    if (field[i][j] == 0) {*/
-/*        return " ";*/
-/*    }*/
-/*    return std::to_string(field[i][j]);*/
-/*}*/
+    int blocks = 1;
+    // Up
+    if (row > 0 && !isBlockVisible(row - 1, column)) {
+        blocks += revealBlock(row - 1, column);
+    }
+
+    // Down
+    if (row < size - 1 && !isBlockVisible(row + 1, column)) {
+        blocks += revealBlock(row + 1, column);
+    }
+
+    // Left
+    if (column > 0 && !isBlockVisible(row, column - 1)) {
+        blocks += revealBlock(row, column - 1);
+    }
+
+    // Right
+    if (column < size - 1 && !isBlockVisible(row, column + 1)) {
+        blocks += revealBlock(row, column + 1);
+    }
+
+    return blocks;
+}

@@ -24,6 +24,8 @@ void Game::initialize() {
  */
 int Game::getSize() { return size; }
 int Game::getBombs() { return bombs; }
+int Game::getFlaggedBombs() { return flaggedBombs; }
+int Game::getHiddenBlocks() { return hiddenBlocks; }
 bool Game::isVictory() { return victory; }
 bool Game::isGameOver() { return gameOver; }
 Field *Game::getField() { return field; }
@@ -49,11 +51,11 @@ void Game::revealBlock(int row, int column) {
     }
 
     bool isFlagged = field->isBlockFlagged(row, column);
-    field->revealBlock(row, column);
     if (isFlagged) {
         flaggedBombs--;
     }
 
+    int revealed = field->revealBlock(row, column);
     bool isBomb = field->isBlockBomb(row, column);
     if (isBomb) {
         victory = false;
@@ -61,7 +63,7 @@ void Game::revealBlock(int row, int column) {
         return;
     }
 
-    hiddenBlocks--;
+    hiddenBlocks -= revealed;
     if (hiddenBlocks <= 0) {
         victory = true;
         gameOver = true;

@@ -12,5 +12,11 @@ class GameManager {
 
     bool shouldStartNewGame();
     void startGame();
-    void printField();
+
+    GameAction readGameAction();
+    void performGameAction(GameAction action);
+
+    bool isGameOver();
+    void showGameOver();
+    void stopGame();
 };

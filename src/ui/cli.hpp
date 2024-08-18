@@ -10,16 +10,20 @@ class Cli : public UserInterface {
 
     void printDifficultyOptions();
 
-    void printGameField(Field *field);
+    void printGameStatus(Game *gameInstance);
+    void printGameField(Game *gameInstance);
     void printGameActions();
 
   public:
     Cli();
 
+    void printVictory(Game *gameInstance);
+    void printGameOver(Game *gameInstance);
+
     MenuAction readMenuAction();
     Difficulty readDifficulty();
-    GameAction readGameAction(Field *field);
+    GameAction readGameAction(Game *gameInstance);
 
-    void printVictory();
-    void printGameOver();
+    int readRow();
+    int readColumn();
 };
