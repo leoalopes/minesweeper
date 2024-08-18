@@ -1,6 +1,7 @@
 #include "cli.hpp"
 #include "user_interface.hpp"
 #include <iostream>
+#include <stdexcept>
 #include <string>
 
 Cli::Cli() {}
@@ -39,8 +40,18 @@ void Cli::printMenuActions() {
     std::cout << "2 - Quit" << "\n";
 }
 
+int Cli::readNumberInput(int fallback) {
+    std::string input;
+    std::cin >> input;
+    try {
+        return std::stoi(input);
+    } catch (std::invalid_argument) {
+        return fallback;
+    }
+}
+
 MenuAction Cli::readMenuAction() {
-    int option;
+    int option = 0;
 
     while (option != 1 && option != 2) {
         clearScreen();
@@ -49,7 +60,7 @@ MenuAction Cli::readMenuAction() {
 
         std::cout << std::endl;
         std::cout << "Input: ";
-        std::cin >> option;
+        option = readNumberInput(0);
     }
 
     if (option == 1) {
@@ -66,7 +77,7 @@ void Cli::printDifficultyOptions() {
 }
 
 Difficulty Cli::readDifficulty() {
-    int option;
+    int option = 0;
 
     while (option != 1 && option != 2 && option != 3) {
         clearScreen();
@@ -75,7 +86,7 @@ Difficulty Cli::readDifficulty() {
 
         std::cout << std::endl;
         std::cout << "Input: ";
-        std::cin >> option;
+        option = readNumberInput(0);
     }
 
     if (option == 1) {
@@ -141,7 +152,7 @@ void Cli::printGameActions() {
 }
 
 GameAction Cli::readGameAction(Game *gameInstance) {
-    int option;
+    int option = 0;
 
     while (option != 1 && option != 2 && option != 3) {
         clearScreen();
@@ -151,7 +162,7 @@ GameAction Cli::readGameAction(Game *gameInstance) {
 
         std::cout << std::endl;
         std::cout << "Input: ";
-        std::cin >> option;
+        option = readNumberInput(0);
     }
 
     if (option == 1) {
@@ -166,10 +177,8 @@ GameAction Cli::readGameAction(Game *gameInstance) {
 }
 
 int Cli::readRow() {
-    int row;
-
     std::cout << "Choose row: ";
-    std::cin >> row;
+    int row = readNumberInput(0);
 
     return row - 1;
 }

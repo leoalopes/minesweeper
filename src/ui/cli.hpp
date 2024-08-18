@@ -14,6 +14,8 @@ class Cli : public UserInterface {
     void printGameField(Game *gameInstance);
     void printGameActions();
 
+    int readNumberInput(int fallback);
+
   public:
     Cli();
 
