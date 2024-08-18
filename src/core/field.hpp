@@ -28,5 +28,5 @@ class Field {
     int getBlockValue(int row, int column);
 
     void flagBlock(int row, int column);
-    int revealBlock(int row, int column);
+    void revealBlock(int row, int column);
 };

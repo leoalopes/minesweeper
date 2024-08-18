@@ -45,6 +45,35 @@ void Game::flagBlock(int row, int column) {
     }
 }
 
+void Game::revealCascade(int row, int column, int *revealedBlocks) {
+    field->revealBlock(row, column);
+    *revealedBlocks += 1;
+
+    if (!field->isBlockSafe(row, column)) {
+        return;
+    }
+
+    // Up
+    if (row > 0 && !field->isBlockVisible(row - 1, column)) {
+        revealCascade(row - 1, column, revealedBlocks);
+    }
+
+    // Down
+    if (row < size - 1 && !field->isBlockVisible(row + 1, column)) {
+        revealCascade(row + 1, column, revealedBlocks);
+    }
+
+    // Left
+    if (column > 0 && !field->isBlockVisible(row, column - 1)) {
+        revealCascade(row, column - 1, revealedBlocks);
+    }
+
+    // Right
+    if (column < size - 1 && !field->isBlockVisible(row, column + 1)) {
+        revealCascade(row, column + 1, revealedBlocks);
+    }
+}
+
 void Game::revealBlock(int row, int column) {
     if (gameOver) {
         throw std::runtime_error("Game over!");
@@ -55,7 +84,9 @@ void Game::revealBlock(int row, int column) {
         flaggedBombs--;
     }
 
-    int revealed = field->revealBlock(row, column);
+    int revealedBlocks = 0;
+    revealCascade(row, column, &revealedBlocks);
+
     bool isBomb = field->isBlockBomb(row, column);
     if (isBomb) {
         victory = false;
@@ -63,7 +94,7 @@ void Game::revealBlock(int row, int column) {
         return;
     }
 
-    hiddenBlocks -= revealed;
+    hiddenBlocks -= revealedBlocks;
     if (hiddenBlocks <= 0) {
         victory = true;
         gameOver = true;

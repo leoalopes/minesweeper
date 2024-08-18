@@ -1,8 +1,6 @@
 #pragma once
 #include "field.hpp"
 
-/*enum Difficulty { Easy, Intermediate, Hard, Extreme };*/
-
 class Game {
     int size;
     int bombs;
@@ -14,6 +12,8 @@ class Game {
 
   private:
     void initialize();
+
+    void revealCascade(int row, int column, int *revealedBlocks);
 
   public:
     Game(int size, int bombs);

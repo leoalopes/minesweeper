@@ -149,32 +149,4 @@ void Field::flagBlock(int row, int column) {
     visibility[row][column] = -1;
 }
 
-int Field::revealBlock(int row, int column) {
-    visibility[row][column] = 1;
-    if (!isBlockSafe(row, column)) {
-        return 1;
-    }
-
-    int blocks = 1;
-    // Up
-    if (row > 0 && !isBlockVisible(row - 1, column)) {
-        blocks += revealBlock(row - 1, column);
-    }
-
-    // Down
-    if (row < size - 1 && !isBlockVisible(row + 1, column)) {
-        blocks += revealBlock(row + 1, column);
-    }
-
-    // Left
-    if (column > 0 && !isBlockVisible(row, column - 1)) {
-        blocks += revealBlock(row, column - 1);
-    }
-
-    // Right
-    if (column < size - 1 && !isBlockVisible(row, column + 1)) {
-        blocks += revealBlock(row, column + 1);
-    }
-
-    return blocks;
-}
+void Field::revealBlock(int row, int column) { visibility[row][column] = 1; }
