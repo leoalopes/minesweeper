@@ -1,14 +1,14 @@
 #pragma once
 #include "../ui/user_interface.hpp"
 #include "game.hpp"
+#include <memory>
 
 class GameManager {
-    Game *gameInstance;
+    std::unique_ptr<Game> gameInstance;
     UserInterface *ui;
 
   public:
     GameManager(UserInterface *ui);
-    ~GameManager();
 
     bool shouldStartNewGame();
     void startGame();

@@ -1,10 +1,14 @@
 #pragma once
+#include <array>
+
+template <typename T, std::size_t Row, std::size_t Column>
+using Matrix = std::array<std::array<T, Column>, Row>;
 
 class Field {
     int size;
     int bombs;
-    int **values;
-    int **visibility;
+    Matrix<int, 26, 26> values;
+    Matrix<int, 26, 26> visibility;
 
   private:
     void initialize();
@@ -15,7 +19,6 @@ class Field {
 
   public:
     Field(int size, int bombs);
-    ~Field();
 
     int getSize();
     int getBombs();

@@ -1,5 +1,6 @@
 #pragma once
 #include "field.hpp"
+#include <memory>
 
 class Game {
     int size;
@@ -8,7 +9,7 @@ class Game {
     int hiddenBlocks;
     bool victory;
     bool gameOver;
-    Field *field;
+    std::unique_ptr<Field> field;
 
   private:
     void initialize();
@@ -17,7 +18,6 @@ class Game {
 
   public:
     Game(int size, int bombs);
-    ~Game();
 
     int getSize();
     int getBombs();

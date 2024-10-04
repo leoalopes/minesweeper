@@ -2,15 +2,7 @@
 #include "../ui/user_interface.hpp"
 #include <stdexcept>
 
-GameManager::GameManager(UserInterface *ui) {
-    this->gameInstance = nullptr;
-    this->ui = ui;
-}
-GameManager::~GameManager() {
-    if (gameInstance != nullptr) {
-        delete gameInstance;
-    }
-}
+GameManager::GameManager(UserInterface *ui) { this->ui = ui; }
 
 bool GameManager::shouldStartNewGame() {
     MenuAction action = ui->readMenuAction();
@@ -18,30 +10,30 @@ bool GameManager::shouldStartNewGame() {
 }
 
 void GameManager::startGame() {
-    if (gameInstance != nullptr) {
+    if (gameInstance) {
         throw std::runtime_error("There is already a game in progress!");
     }
 
     Difficulty difficulty = ui->readDifficulty();
     switch (difficulty) {
     case Difficulty::Easy:
-        gameInstance = new Game(10, 10);
+        gameInstance = std::make_unique<Game>(10, 10);
         break;
     case Difficulty::Intermediate:
-        gameInstance = new Game(20, 30);
+        gameInstance = std::make_unique<Game>(20, 30);
         break;
     case Difficulty::Hard:
-        gameInstance = new Game(26, 50);
+        gameInstance = std::make_unique<Game>(26, 50);
         break;
     }
 }
 
 GameAction GameManager::readGameAction() {
-    if (gameInstance == nullptr) {
+    if (!gameInstance) {
         throw std::runtime_error("No game instance in progress!");
     }
 
-    return ui->readGameAction(gameInstance);
+    return ui->readGameAction(gameInstance.get());
 }
 
 void GameManager::performGameAction(GameAction action) {
@@ -76,7 +68,7 @@ void GameManager::performGameAction(GameAction action) {
 }
 
 bool GameManager::isGameOver() {
-    if (gameInstance == nullptr) {
+    if (!gameInstance) {
         throw std::runtime_error("No game instance in progress!");
     }
 
@@ -84,7 +76,7 @@ bool GameManager::isGameOver() {
 }
 
 void GameManager::showGameOver() {
-    if (gameInstance == nullptr) {
+    if (!gameInstance) {
         throw std::runtime_error("No game instance in progress!");
     }
 
@@ -93,17 +85,16 @@ void GameManager::showGameOver() {
     }
 
     if (gameInstance->isVictory()) {
-        ui->printVictory(gameInstance);
+        ui->printVictory(gameInstance.get());
     } else {
-        ui->printGameOver(gameInstance);
+        ui->printGameOver(gameInstance.get());
     }
 }
 
 void GameManager::stopGame() {
-    if (gameInstance == nullptr) {
+    if (!gameInstance) {
         throw std::runtime_error("No game instance in progress!");
     }
 
-    delete gameInstance;
-    gameInstance = nullptr;
+    gameInstance.reset();
 }

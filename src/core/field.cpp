@@ -7,24 +7,12 @@ Field::Field(int size, int bombs) {
     this->bombs = bombs;
     initialize();
 }
-Field::~Field() {
-    for (int i = 0; i < size; i++) {
-        delete[] values[i];
-        delete[] visibility[i];
-    }
-    delete[] values;
-    delete[] visibility;
-}
 
 /*
  * Initialize field state
  */
 void Field::initialize() {
-    values = new int *[size];
-    visibility = new int *[size];
     for (int row = 0; row < size; row++) {
-        values[row] = new int[size];
-        visibility[row] = new int[size];
         for (int column = 0; column < size; column++) {
             values[row][column] = 0;
             visibility[row][column] = 0;
