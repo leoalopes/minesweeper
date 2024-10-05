@@ -15,6 +15,7 @@ endif()
 set(CMAKE_GENERATOR "Unix Makefiles")
 set(CMAKE_C_COMPILER "gcc")
 set(CMAKE_CXX_COMPILER "g++")
+set(CMAKE_CXX_CLANG_TIDY "clang-tidy")
 
 add_library(core STATIC src/core/bomb_generator.cpp src/core/field.cpp src/core/game.cpp src/core/game_manager.cpp)
 target_include_directories(core PUBLIC src/core)
