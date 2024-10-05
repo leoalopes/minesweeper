@@ -16,7 +16,7 @@ set(CMAKE_GENERATOR "Unix Makefiles")
 set(CMAKE_C_COMPILER "gcc")
 set(CMAKE_CXX_COMPILER "g++")
 
-add_library(core STATIC src/core/field.cpp src/core/game.cpp src/core/game_manager.cpp)
+add_library(core STATIC src/core/bomb_generator.cpp src/core/field.cpp src/core/game.cpp src/core/game_manager.cpp)
 target_include_directories(core PUBLIC src/core)
 
 add_library(ui STATIC src/ui/cli.cpp)
