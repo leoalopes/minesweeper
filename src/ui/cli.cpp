@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <string>
 
-Cli::Cli() {}
+Cli::Cli() = default;
 
 void Cli::clearScreen() { system("clear"); }
 
@@ -245,9 +245,5 @@ bool Cli::askConfirmation(std::string message) {
     std::string input;
     std::cin >> input;
 
-    if (input.at(0) == 'y') {
-        return true;
-    }
-
-    return false;
+    return input.at(0) == 'y';
 }

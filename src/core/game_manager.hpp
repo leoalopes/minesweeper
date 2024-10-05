@@ -5,10 +5,10 @@
 
 class GameManager {
     std::unique_ptr<Game> gameInstance;
-    UserInterface *ui;
+    UserInterface *interface;
 
   public:
-    GameManager(UserInterface *ui);
+    explicit GameManager(UserInterface *interface);
 
     bool shouldStartNewGame();
     void startGame();

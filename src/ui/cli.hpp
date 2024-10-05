@@ -3,30 +3,30 @@
 
 class Cli : public UserInterface {
   private:
-    void clearScreen();
+    void static clearScreen();
 
-    void printGreeting();
-    void printMenuActions();
+    void static printGreeting();
+    void static printMenuActions();
 
-    void printDifficultyOptions();
+    void static printDifficultyOptions();
 
-    void printGameStatus(Game *gameInstance);
-    void printGameField(Game *gameInstance);
-    void printGameActions();
+    void static printGameStatus(Game *gameInstance);
+    void static printGameField(Game *gameInstance);
+    void static printGameActions();
 
-    int readNumberInput(int fallback);
+    int static readNumberInput(int fallback);
 
   public:
     Cli();
 
-    void printVictory(Game *gameInstance);
-    void printGameOver(Game *gameInstance);
+    void printVictory(Game *gameInstance) override;
+    void printGameOver(Game *gameInstance) override;
 
-    MenuAction readMenuAction();
-    Difficulty readDifficulty();
-    GameAction readGameAction(Game *gameInstance);
+    MenuAction readMenuAction() override;
+    Difficulty readDifficulty() override;
+    GameAction readGameAction(Game *gameInstance) override;
 
-    std::array<int, 2> readCoordinates();
+    std::array<int, 2> readCoordinates() override;
 
-    bool askConfirmation(std::string message);
+    bool askConfirmation(std::string message) override;
 };

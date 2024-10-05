@@ -19,12 +19,16 @@ class Game {
   public:
     Game(int size, int bombs);
 
-    int getSize();
-    int getBombs();
-    int getFlaggedBombs();
-    int getHiddenBlocks();
-    bool isVictory();
-    bool isGameOver();
+    /*
+     * Getters
+     */
+    [[nodiscard]] int getSize() const { return size; }
+    [[nodiscard]] int getBombs() const { return bombs; }
+    [[nodiscard]] int getFlaggedBombs() const { return flaggedBombs; }
+    [[nodiscard]] int getHiddenBlocks() const { return hiddenBlocks; }
+    [[nodiscard]] bool isVictory() const { return victory; }
+    [[nodiscard]] bool isGameOver() const { return gameOver; }
+
     Field *getField();
 
     void flagBlock(int row, int column);

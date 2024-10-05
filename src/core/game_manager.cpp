@@ -2,10 +2,10 @@
 #include "../ui/user_interface.hpp"
 #include <stdexcept>
 
-GameManager::GameManager(UserInterface *ui) { this->ui = ui; }
+GameManager::GameManager(UserInterface *interface) : interface(interface) {}
 
 bool GameManager::shouldStartNewGame() {
-    MenuAction action = ui->readMenuAction();
+    MenuAction action = interface->readMenuAction();
     return action == MenuAction::Play;
 }
 
@@ -14,7 +14,7 @@ void GameManager::startGame() {
         throw std::runtime_error("There is already a game in progress!");
     }
 
-    Difficulty difficulty = ui->readDifficulty();
+    Difficulty difficulty = interface->readDifficulty();
     switch (difficulty) {
     case Difficulty::Easy:
         gameInstance = std::make_unique<Game>(10, 10);
@@ -33,7 +33,7 @@ GameAction GameManager::readGameAction() {
         throw std::runtime_error("No game instance in progress!");
     }
 
-    return ui->readGameAction(gameInstance.get());
+    return interface->readGameAction(gameInstance.get());
 }
 
 void GameManager::performGameAction(GameAction action) {
@@ -41,7 +41,7 @@ void GameManager::performGameAction(GameAction action) {
         return;
     }
 
-    auto [column, row] = ui->readCoordinates();
+    auto [column, row] = interface->readCoordinates();
 
     if (row < 0 || row >= gameInstance->getSize() || column < 0 ||
         column >= gameInstance->getSize()) {
@@ -51,9 +51,9 @@ void GameManager::performGameAction(GameAction action) {
     if (action == GameAction::Reveal) {
         bool isBlockFlagged = gameInstance->isBlockFlagged(row, column);
         if (isBlockFlagged) {
-            bool shouldContinue =
-                ui->askConfirmation("The block selected is flagged as a bomb, "
-                                    "do you want to continue?");
+            bool shouldContinue = interface->askConfirmation(
+                "The block selected is flagged as a bomb, "
+                "do you want to continue?");
             if (!shouldContinue) {
                 return;
             }
@@ -85,9 +85,9 @@ void GameManager::showGameOver() {
     }
 
     if (gameInstance->isVictory()) {
-        ui->printVictory(gameInstance.get());
+        interface->printVictory(gameInstance.get());
     } else {
-        ui->printGameOver(gameInstance.get());
+        interface->printGameOver(gameInstance.get());
     }
 }
 

@@ -1,10 +1,13 @@
 #include "field.hpp"
+#include "bomb_generator.hpp"
 #include <cstdlib>
 #include <stdexcept>
 
-Field::Field(int size, int bombs) {
-    this->size = size;
-    this->bombs = bombs;
+const int bombChance = 5;
+
+Field::Field(int size, int bombs)
+    : size(size), bombs(bombs), bombGenerator(bombChance), values(),
+      visibility() {
     initialize();
 }
 
@@ -14,8 +17,8 @@ Field::Field(int size, int bombs) {
 void Field::initialize() {
     for (int row = 0; row < size; row++) {
         for (int column = 0; column < size; column++) {
-            values[row][column] = 0;
-            visibility[row][column] = 0;
+            values.at(row).at(column) = 0;
+            visibility.at(row).at(column) = 0;
         }
     }
 
@@ -27,9 +30,9 @@ void Field::spreadBombs() {
     while (bombsLeft > 0) {
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
-                if (values[row][column] != -1) {
-                    if (shouldAddBomb()) {
-                        values[row][column] = -1;
+                if (values.at(row).at(column) != -1) {
+                    if (this->bombGenerator.generate()) {
+                        values.at(row).at(column) = -1;
                         incrementAround(row, column);
 
                         bombsLeft--;
@@ -43,63 +46,60 @@ void Field::spreadBombs() {
     }
 }
 
-bool Field::shouldAddBomb() { return (rand() % 100 + 1) <= 5; }
-
 void Field::incrementAround(int row, int column) {
     // Up
-    if (row > 0 && values[row - 1][column] != -1) {
-        values[row - 1][column] += 1;
+    if (row > 0 && values.at(row - 1).at(column) != -1) {
+        values.at(row - 1).at(column) += 1;
     }
 
     // Down
-    if (row < size - 1 && values[row + 1][column] != -1) {
-        values[row + 1][column] += 1;
+    if (row < size - 1 && values.at(row + 1).at(column) != -1) {
+        values.at(row + 1).at(column) += 1;
     }
 
     // Left
-    if (column > 0 && values[row][column - 1] != -1) {
-        values[row][column - 1] += 1;
+    if (column > 0 && values.at(row).at(column - 1) != -1) {
+        values.at(row).at(column - 1) += 1;
     }
 
     // Right
-    if (column < size - 1 && values[row][column + 1] != -1) {
-        values[row][column + 1] += 1;
+    if (column < size - 1 && values.at(row).at(column + 1) != -1) {
+        values.at(row).at(column + 1) += 1;
     }
 
     // UpLeft
-    if (row > 0 && column > 0 && values[row - 1][column - 1] != -1) {
-        values[row - 1][column - 1] += 1;
+    if (row > 0 && column > 0 && values.at(row - 1).at(column - 1) != -1) {
+        values.at(row - 1).at(column - 1) += 1;
     }
 
     // UpRight
-    if (row > 0 && column < size - 1 && values[row - 1][column + 1] != -1) {
-        values[row - 1][column + 1] += 1;
+    if (row > 0 && column < size - 1 &&
+        values.at(row - 1).at(column + 1) != -1) {
+        values.at(row - 1).at(column + 1) += 1;
     }
 
     // DownLeft
-    if (row < size - 1 && column > 0 && values[row + 1][column - 1] != -1) {
-        values[row + 1][column - 1] += 1;
+    if (row < size - 1 && column > 0 &&
+        values.at(row + 1).at(column - 1) != -1) {
+        values.at(row + 1).at(column - 1) += 1;
     }
 
     // DownRight
     if (row < size - 1 && column < size - 1 &&
-        values[row + 1][column + 1] != -1) {
-        values[row + 1][column + 1] += 1;
+        values.at(row + 1).at(column + 1) != -1) {
+        values.at(row + 1).at(column + 1) += 1;
     }
 }
 
 /*
  * Getters
  */
-int Field::getSize() { return size; }
-int Field::getBombs() { return bombs; }
-
 bool Field::isBlockSafe(int row, int column) {
     if (!isBlockVisible(row, column)) {
         throw std::runtime_error("Block is not visible!");
     }
 
-    return values[row][column] == 0;
+    return values.at(row).at(column) == 0;
 }
 
 bool Field::isBlockBomb(int row, int column) {
@@ -107,15 +107,15 @@ bool Field::isBlockBomb(int row, int column) {
         throw std::runtime_error("Block is not visible!");
     }
 
-    return values[row][column] == -1;
+    return values.at(row).at(column) == -1;
 }
 
 bool Field::isBlockFlagged(int row, int column) {
-    return visibility[row][column] == -1;
+    return visibility.at(row).at(column) == -1;
 }
 
 bool Field::isBlockVisible(int row, int column) {
-    return visibility[row][column] == 1;
+    return visibility.at(row).at(column) == 1;
 }
 
 int Field::getBlockValue(int row, int column) {
@@ -123,7 +123,7 @@ int Field::getBlockValue(int row, int column) {
         throw std::runtime_error("Block is not visible!");
     }
 
-    return values[row][column];
+    return values.at(row).at(column);
 }
 
 /*
@@ -134,7 +134,9 @@ void Field::flagBlock(int row, int column) {
         throw std::runtime_error("Block is visible!");
     }
 
-    visibility[row][column] = -1;
+    visibility.at(row).at(column) = -1;
 }
 
-void Field::revealBlock(int row, int column) { visibility[row][column] = 1; }
+void Field::revealBlock(int row, int column) {
+    visibility.at(row).at(column) = 1;
+}

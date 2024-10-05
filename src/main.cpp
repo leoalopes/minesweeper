@@ -9,11 +9,14 @@ int main() {
     while (gameManager.shouldStartNewGame()) {
         gameManager.startGame();
 
-        GameAction action;
-        do {
-            action = gameManager.readGameAction();
+        while (true) {
+            GameAction action = gameManager.readGameAction();
             gameManager.performGameAction(action);
-        } while (action != GameAction::Stop && !gameManager.isGameOver());
+
+            if (action == GameAction::Stop || gameManager.isGameOver()) {
+                break;
+            }
+        };
 
         gameManager.showGameOver();
         gameManager.stopGame();

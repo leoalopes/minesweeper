@@ -2,31 +2,17 @@
 #include "field.hpp"
 #include <stdexcept>
 
-Game::Game(int size, int bombs) {
-    this->size = size;
-    this->bombs = bombs;
-    initialize();
+Game::Game(int size, int bombs)
+    : size(size), bombs(bombs), flaggedBombs(0),
+      hiddenBlocks(size * size - bombs), victory(false), gameOver(false) {
+    field = std::make_unique<Field>(size, bombs);
 }
 
 /*
  * Initialize internal game control variables
  */
-void Game::initialize() {
-    hiddenBlocks = size * size - bombs;
-    victory = false;
-    gameOver = false;
-    field = std::make_unique<Field>(size, bombs);
-}
+void Game::initialize() {}
 
-/*
- * Getters
- */
-int Game::getSize() { return size; }
-int Game::getBombs() { return bombs; }
-int Game::getFlaggedBombs() { return flaggedBombs; }
-int Game::getHiddenBlocks() { return hiddenBlocks; }
-bool Game::isVictory() { return victory; }
-bool Game::isGameOver() { return gameOver; }
 Field *Game::getField() { return field.get(); }
 
 /*
