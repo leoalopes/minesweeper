@@ -31,7 +31,9 @@ Since CLI and GUI work very differently, it might not be that simple, but having
 
 ## Linter
 
-TODO
+The build uses [clang-tidy](https://clang.llvm.org/extra/clang-tidy) to warn on most checks and will fail on any warning.
+
+Most guidelines are configured, removing mostly preference checks and project specific ones. Build can get quite slow with so many checks, so probably need to create a separate command to not lint on every build.
 
 ## Testing
 
