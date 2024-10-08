@@ -1,11 +1,14 @@
 #include "game_manager.hpp"
 #include "../ui/user_interface.hpp"
+#include "difficulty.hpp"
+#include "game.hpp"
+#include <memory>
 #include <stdexcept>
 
 GameManager::GameManager(UserInterface *interface) : interface(interface) {}
 
 bool GameManager::shouldStartNewGame() {
-    MenuAction action = interface->readMenuAction();
+    const MenuAction action = interface->readMenuAction();
     return action == MenuAction::Play;
 }
 
@@ -14,18 +17,8 @@ void GameManager::startGame() {
         throw std::runtime_error("There is already a game in progress!");
     }
 
-    Difficulty difficulty = interface->readDifficulty();
-    switch (difficulty) {
-    case Difficulty::Easy:
-        gameInstance = std::make_unique<Game>(10, 10);
-        break;
-    case Difficulty::Intermediate:
-        gameInstance = std::make_unique<Game>(20, 30);
-        break;
-    case Difficulty::Hard:
-        gameInstance = std::make_unique<Game>(26, 50);
-        break;
-    }
+    const Difficulty difficulty = interface->readDifficulty();
+    gameInstance = std::make_unique<Game>(DifficultyOptions(difficulty));
 }
 
 GameAction GameManager::readGameAction() {
@@ -49,9 +42,9 @@ void GameManager::performGameAction(GameAction action) {
     }
 
     if (action == GameAction::Reveal) {
-        bool isBlockFlagged = gameInstance->isBlockFlagged(row, column);
+        const bool isBlockFlagged = gameInstance->isBlockFlagged(row, column);
         if (isBlockFlagged) {
-            bool shouldContinue = interface->askConfirmation(
+            const bool shouldContinue = interface->askConfirmation(
                 "The block selected is flagged as a bomb, "
                 "do you want to continue?");
             if (!shouldContinue) {

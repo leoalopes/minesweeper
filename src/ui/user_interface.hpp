@@ -1,10 +1,10 @@
 #pragma once
+#include "../core/difficulty.hpp"
 #include "../core/game.hpp"
 #include <array>
 #include <string>
 
 enum class MenuAction { Play, Quit };
-enum class Difficulty { Easy, Intermediate, Hard };
 enum class GameAction { Reveal, Flag, Stop };
 
 class UserInterface {

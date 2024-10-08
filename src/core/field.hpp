@@ -1,5 +1,6 @@
 #pragma once
 #include "bomb_generator.hpp"
+#include "difficulty.hpp"
 #include <array>
 
 #define MAX_FIELD_SIZE 26
@@ -22,7 +23,7 @@ class Field {
     void incrementAround(int row, int column);
 
   public:
-    Field(int size, int bombs);
+    explicit Field(DifficultyOptions options);
 
     [[nodiscard]] int getSize() const { return size; }
     [[nodiscard]] int getBombs() const { return bombs; }

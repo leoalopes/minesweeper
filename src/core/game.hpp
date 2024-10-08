@@ -1,4 +1,5 @@
 #pragma once
+#include "difficulty.hpp"
 #include "field.hpp"
 #include <memory>
 
@@ -17,7 +18,7 @@ class Game {
     void revealCascade(int row, int column, int *revealedBlocks);
 
   public:
-    Game(int size, int bombs);
+    explicit Game(DifficultyOptions options);
 
     /*
      * Getters

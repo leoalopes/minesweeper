@@ -1,11 +1,14 @@
 #include "game.hpp"
+#include "difficulty.hpp"
 #include "field.hpp"
+#include <memory>
 #include <stdexcept>
 
-Game::Game(int size, int bombs)
-    : size(size), bombs(bombs), flaggedBombs(0),
-      hiddenBlocks(size * size - bombs), victory(false), gameOver(false) {
-    field = std::make_unique<Field>(size, bombs);
+Game::Game(DifficultyOptions options)
+    : size(options.getFieldSize()), bombs(options.getBombQuantity()),
+      flaggedBombs(0), hiddenBlocks(options.getSafeBlocks()), victory(false),
+      gameOver(false) {
+    field = std::make_unique<Field>(options);
 }
 
 /*
@@ -23,7 +26,7 @@ void Game::flagBlock(int row, int column) {
         throw std::runtime_error("Game over!");
     }
 
-    bool isRevealed = field->isBlockVisible(row, column);
+    const bool isRevealed = field->isBlockVisible(row, column);
     if (!isRevealed) {
         field->flagBlock(row, column);
         flaggedBombs++;
@@ -64,7 +67,7 @@ void Game::revealBlock(int row, int column) {
         throw std::runtime_error("Game over!");
     }
 
-    bool isFlagged = field->isBlockFlagged(row, column);
+    const bool isFlagged = field->isBlockFlagged(row, column);
     if (isFlagged) {
         flaggedBombs--;
     }
@@ -72,7 +75,7 @@ void Game::revealBlock(int row, int column) {
     int revealedBlocks = 0;
     revealCascade(row, column, &revealedBlocks);
 
-    bool isBomb = field->isBlockBomb(row, column);
+    const bool isBomb = field->isBlockBomb(row, column);
     if (isBomb) {
         victory = false;
         gameOver = true;

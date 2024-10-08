@@ -1,13 +1,14 @@
 #include "field.hpp"
 #include "bomb_generator.hpp"
+#include "difficulty.hpp"
 #include <cstdlib>
 #include <stdexcept>
 
 const int bombChance = 5;
 
-Field::Field(int size, int bombs)
-    : size(size), bombs(bombs), bombGenerator(bombChance), values(),
-      visibility() {
+Field::Field(DifficultyOptions options)
+    : size(options.getFieldSize()), bombs(options.getBombQuantity()),
+      bombGenerator(bombChance), values(), visibility() {
     initialize();
 }
 

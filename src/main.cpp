@@ -10,7 +10,7 @@ int main() {
         gameManager.startGame();
 
         while (true) {
-            GameAction action = gameManager.readGameAction();
+            const GameAction action = gameManager.readGameAction();
             gameManager.performGameAction(action);
 
             if (action == GameAction::Stop || gameManager.isGameOver()) {

@@ -1,6 +1,8 @@
 #pragma once
 #include <random>
 
+enum class RandomizableValues : int { MIN = 1, MAX = 100 };
+
 class BombGenerator {
     int chance;
     std::mt19937 generator;

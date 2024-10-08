@@ -1,12 +1,20 @@
 #include "cli.hpp"
+#include "../core/difficulty.hpp"
+#include "../core/field.hpp"
+#include "../core/game.hpp"
 #include "user_interface.hpp"
+#include <array>
+#include <cstddef>
 #include <iostream>
 #include <stdexcept>
 #include <string>
 
 Cli::Cli() = default;
 
-void Cli::clearScreen() { system("clear"); }
+void Cli::clearScreen() {
+    std::cout << "\033[2J";
+    std::cout << "\033[H";
+}
 
 void Cli::printGreeting() {
     std::cout
@@ -18,14 +26,14 @@ void Cli::printGreeting() {
     std::cout
         << "   /  |/  (_____  ___ / ____      _____  ___  ____  ___  _____"
         << "\n";
-    std::cout << "  / /|_/ / / __ \\/ _ \\\\__ | | /| / / _ \\/ _ \\/ __ \\/ _ "
-                 "\\/ ___/"
+    std::cout << R"(  / /|_/ / / __ \/ _ \\__ | | /| / / _ \/ _ \/ __ \/ _ )"
+                 R"(\/ ___/)"
               << "\n";
     std::cout
         << " / /  / / / / / /  _____/ | |/ |/ /  __/  __/ /_/ /  __/ /    "
         << "\n";
     std::cout
-        << "/_/  /_/_/_/ /_/\\___/____/|__/|__/\\___/\\___/ .___/\\___/_/     "
+        << R"(/_/  /_/_/_/ /_/\___/____/|__/|__/\___/\___/ .___/\___/_/     )"
         << "\n";
     std::cout
         << "                                          /_/                 "
@@ -45,7 +53,7 @@ int Cli::readNumberInput(int fallback) {
     std::cin >> input;
     try {
         return std::stoi(input);
-    } catch (std::invalid_argument) {
+    } catch (std::invalid_argument &err) {
         return fallback;
     }
 }
@@ -58,7 +66,7 @@ MenuAction Cli::readMenuAction() {
         printGreeting();
         printMenuActions();
 
-        std::cout << std::endl;
+        std::cout << std::flush;
         std::cout << "Input: ";
         option = readNumberInput(0);
     }
@@ -84,7 +92,7 @@ Difficulty Cli::readDifficulty() {
         printGreeting();
         printDifficultyOptions();
 
-        std::cout << std::endl;
+        std::cout << std::flush;
         std::cout << "Input: ";
         option = readNumberInput(0);
     }
@@ -106,8 +114,10 @@ void Cli::printGameStatus(Game *gameInstance) {
     std::cout << "Total bombs: " << gameInstance->getBombs() << "\n\n";
 }
 
+const int lastSingleColumnValue = 9;
+
 void Cli::printGameField(Game *gameInstance) {
-    int size = gameInstance->getSize();
+    const int size = gameInstance->getSize();
     Field *field = gameInstance->getField();
 
     std::cout << "     ";
@@ -120,13 +130,13 @@ void Cli::printGameField(Game *gameInstance) {
     for (int row = 0; row < size; row++) {
         std::cout << "\n";
 
-        if (row < 9) {
+        if (row < lastSingleColumnValue) {
             std::cout << " ";
         }
         std::cout << row + 1 << "   ";
         for (int column = 0; column < size; column++) {
             if (field->isBlockVisible(row, column)) {
-                int value = field->getBlockValue(row, column);
+                const int value = field->getBlockValue(row, column);
                 if (value == -1) {
                     std::cout << "\033[1;31m󰚑\033[0m";
                 } else if (value == 0) {
@@ -142,7 +152,7 @@ void Cli::printGameField(Game *gameInstance) {
             std::cout << " ";
         }
     }
-    std::cout << "\n" << std::endl;
+    std::cout << "\n\n";
 }
 
 void Cli::printGameActions() {
@@ -160,7 +170,7 @@ GameAction Cli::readGameAction(Game *gameInstance) {
         printGameField(gameInstance);
         printGameActions();
 
-        std::cout << std::endl;
+        std::cout << std::flush;
         std::cout << "Input: ";
         option = readNumberInput(0);
     }
@@ -182,11 +192,11 @@ std::array<int, 2> Cli::readCoordinates() {
     std::cout << "Choose coordinates: ";
     std::cin >> input;
 
-    std::string uppercaseAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    std::string lowercaseAlphabet = "abcdefghijklmnopqrstuvwxyz";
+    const std::string uppercaseAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const std::string lowercaseAlphabet = "abcdefghijklmnopqrstuvwxyz";
 
-    std::size_t uppercaseMatch = uppercaseAlphabet.find(input.at(0));
-    std::size_t lowercaseMatch = lowercaseAlphabet.find(input.at(0));
+    const std::size_t uppercaseMatch = uppercaseAlphabet.find(input.at(0));
+    const std::size_t lowercaseMatch = lowercaseAlphabet.find(input.at(0));
 
     std::array<int, 2> coordinates({-1, -1});
     if (uppercaseMatch == std::string::npos &&
@@ -202,7 +212,7 @@ std::array<int, 2> Cli::readCoordinates() {
 
     try {
         coordinates[1] = std::stoi(input.substr(1)) - 1;
-    } catch (std::invalid_argument) {
+    } catch (std::invalid_argument &err) {
         coordinates[1] = -1;
     }
 
