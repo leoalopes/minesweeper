@@ -19,11 +19,9 @@ set(CMAKE_CXX_CLANG_TIDY "clang-tidy")
 
 file(GLOB core_files "src/core/*.cpp")
 add_library(core STATIC ${core_files})
-target_include_directories(core PUBLIC src/core)
 
 file(GLOB ui_files "src/ui/*.cpp")
 add_library(ui STATIC ${ui_files})
-target_include_directories(ui PUBLIC src/ui)
 
 add_executable(minesweeper src/main.cpp)
 target_link_libraries(minesweeper core ui)
