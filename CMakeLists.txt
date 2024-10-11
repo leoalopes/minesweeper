@@ -17,10 +17,12 @@ set(CMAKE_C_COMPILER "gcc")
 set(CMAKE_CXX_COMPILER "g++")
 set(CMAKE_CXX_CLANG_TIDY "clang-tidy")
 
-add_library(core STATIC src/core/bomb_generator.cpp src/core/difficulty.cpp src/core/field.cpp src/core/game.cpp src/core/game_manager.cpp)
+file(GLOB core_files "src/core/*.cpp")
+add_library(core STATIC ${core_files})
 target_include_directories(core PUBLIC src/core)
 
-add_library(ui STATIC src/ui/cli.cpp)
+file(GLOB ui_files "src/ui/*.cpp")
+add_library(ui STATIC ${ui_files})
 target_include_directories(ui PUBLIC src/ui)
 
 add_executable(minesweeper src/main.cpp)
