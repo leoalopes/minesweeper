@@ -1,6 +1,6 @@
-#include "core/difficulty.hpp"
-#include "core/game.hpp"
-#include "core/game_manager.hpp"
+#include "../../core/src/difficulty.hpp"
+#include "../../core/src/game.hpp"
+#include "../../core/src/game_manager.hpp"
 #include "ui/cli.hpp"
 
 namespace {

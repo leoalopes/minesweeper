@@ -19,11 +19,5 @@ set(CMAKE_C_COMPILER "gcc")
 set(CMAKE_CXX_COMPILER "g++")
 set(CMAKE_CXX_CLANG_TIDY "clang-tidy")
 
-file(GLOB core_files "src/core/*.cpp")
-add_library(core STATIC ${core_files})
-
-file(GLOB ui_files "src/ui/*.cpp")
-add_library(ui STATIC ${ui_files})
-
-add_executable(minesweeper src/main.cpp)
-target_link_libraries(minesweeper core ui)
+add_subdirectory(core)
+add_subdirectory(app)

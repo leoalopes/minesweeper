@@ -1,15 +1,13 @@
 #include "cli.hpp"
-#include "../core/difficulty.hpp"
-#include "../core/field.hpp"
-#include "../core/game.hpp"
-#include "../core/game_manager.hpp"
+#include "../../../core/src/difficulty.hpp"
+#include "../../../core/src/field.hpp"
+#include "../../../core/src/game.hpp"
+#include "../../../core/src/game_manager.hpp"
 #include <array>
 #include <cstddef>
 #include <iostream>
 #include <stdexcept>
 #include <string>
-
-Cli::Cli() = default;
 
 void Cli::clearScreen() {
     std::cout << "\033[2J";
@@ -249,7 +247,7 @@ void Cli::printGameOver(Game *gameInstance) {
     std::cin.get();
 }
 
-bool Cli::askConfirmation(std::string message) {
+bool Cli::askConfirmation(const std::string &message) {
     std::cout << message << " [y/n] ";
 
     std::string input;
