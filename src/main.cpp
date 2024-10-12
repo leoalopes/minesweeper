@@ -2,7 +2,6 @@
 #include "core/game.hpp"
 #include "core/game_manager.hpp"
 #include "ui/cli.hpp"
-#include "ui/user_interface.hpp"
 
 namespace {
 void performGameLoop(GameManager *gameManager, Cli *interface) {

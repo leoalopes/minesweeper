@@ -2,7 +2,7 @@
 #include "../core/difficulty.hpp"
 #include "../core/field.hpp"
 #include "../core/game.hpp"
-#include "user_interface.hpp"
+#include "../core/game_manager.hpp"
 #include <array>
 #include <cstddef>
 #include <iostream>

@@ -1,11 +1,9 @@
 #pragma once
 #include "../core/difficulty.hpp"
 #include "../core/game.hpp"
+#include "../core/game_manager.hpp"
 #include <array>
 #include <string>
-
-enum class MenuAction { Play, Quit };
-enum class GameAction { Reveal, Flag, Stop };
 
 class UserInterface {
   public:

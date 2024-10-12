@@ -19,7 +19,7 @@ class Field {
     void initialize();
     void spreadBombs();
 
-    bool validateCoordinates(int row, int column) const {
+    [[nodiscard]] bool validateCoordinates(int row, int column) const {
         if (row < 0 || row > size - 1) {
             return false;
         }
