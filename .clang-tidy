@@ -11,6 +11,7 @@ Checks: "*,
         -readability-static-accessed-through-instance,
         -readability-avoid-const-params-in-decls,
         -cppcoreguidelines-non-private-member-variables-in-classes,
+        -bugprone-easily-swappable-parameters,
         -misc-non-private-member-variables-in-classes,
         -misc-no-recursion,
 "

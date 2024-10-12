@@ -19,6 +19,18 @@ class Field {
     void initialize();
     void spreadBombs();
 
+    bool validateCoordinates(int row, int column) const {
+        if (row < 0 || row > size - 1) {
+            return false;
+        }
+
+        if (column < 0 || column > size - 1) {
+            return false;
+        }
+
+        return true;
+    }
+
     bool shouldAddBomb();
     void incrementAround(int row, int column);
 

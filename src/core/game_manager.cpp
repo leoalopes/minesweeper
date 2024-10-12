@@ -5,53 +5,34 @@
 #include <memory>
 #include <stdexcept>
 
-GameManager::GameManager(UserInterface *interface) : interface(interface) {}
-
-bool GameManager::shouldStartNewGame() {
-    const MenuAction action = interface->readMenuAction();
-    return action == MenuAction::Play;
-}
-
-void GameManager::startGame() {
+void GameManager::startGame(Difficulty difficulty) {
     if (gameInstance) {
         throw std::runtime_error("There is already a game in progress!");
     }
 
-    const Difficulty difficulty = interface->readDifficulty();
     gameInstance = std::make_unique<Game>(DifficultyOptions(difficulty));
 }
 
-GameAction GameManager::readGameAction() {
+Game *GameManager::getGameInstance() {
     if (!gameInstance) {
         throw std::runtime_error("No game instance in progress!");
     }
 
-    return interface->readGameAction(gameInstance.get());
+    return gameInstance.get();
 }
 
-void GameManager::performGameAction(GameAction action) {
+void GameManager::performGameAction(GameAction action, int row, int column) {
     if (action == GameAction::Stop) {
         return;
     }
 
-    auto [column, row] = interface->readCoordinates();
-
+    // TODO move to field and delete
     if (row < 0 || row >= gameInstance->getSize() || column < 0 ||
         column >= gameInstance->getSize()) {
         return;
     }
 
     if (action == GameAction::Reveal) {
-        const bool isBlockFlagged = gameInstance->isBlockFlagged(row, column);
-        if (isBlockFlagged) {
-            const bool shouldContinue = interface->askConfirmation(
-                "The block selected is flagged as a bomb, "
-                "do you want to continue?");
-            if (!shouldContinue) {
-                return;
-            }
-        }
-
         gameInstance->revealBlock(row, column);
     }
 
@@ -66,22 +47,6 @@ bool GameManager::isGameOver() {
     }
 
     return gameInstance->isGameOver();
-}
-
-void GameManager::showGameOver() {
-    if (!gameInstance) {
-        throw std::runtime_error("No game instance in progress!");
-    }
-
-    if (!gameInstance->isGameOver()) {
-        return;
-    }
-
-    if (gameInstance->isVictory()) {
-        interface->printVictory(gameInstance.get());
-    } else {
-        interface->printGameOver(gameInstance.get());
-    }
 }
 
 void GameManager::stopGame() {

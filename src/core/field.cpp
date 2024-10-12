@@ -96,6 +96,11 @@ void Field::incrementAround(int row, int column) {
  * Getters
  */
 bool Field::isBlockSafe(int row, int column) {
+    if (!validateCoordinates(row, column)) {
+        throw std::runtime_error(
+            "Invalid coordinates when verifying if block is safe!");
+    }
+
     if (!isBlockVisible(row, column)) {
         throw std::runtime_error("Block is not visible!");
     }
@@ -104,6 +109,11 @@ bool Field::isBlockSafe(int row, int column) {
 }
 
 bool Field::isBlockBomb(int row, int column) {
+    if (!validateCoordinates(row, column)) {
+        throw std::runtime_error(
+            "Invalid coordinates when verifying if block is bomb!");
+    }
+
     if (!isBlockVisible(row, column)) {
         throw std::runtime_error("Block is not visible!");
     }
@@ -112,14 +122,27 @@ bool Field::isBlockBomb(int row, int column) {
 }
 
 bool Field::isBlockFlagged(int row, int column) {
+    if (!validateCoordinates(row, column)) {
+        return false;
+    }
+
     return visibility.at(row).at(column) == -1;
 }
 
 bool Field::isBlockVisible(int row, int column) {
+    if (!validateCoordinates(row, column)) {
+        return false;
+    }
+
     return visibility.at(row).at(column) == 1;
 }
 
 int Field::getBlockValue(int row, int column) {
+    if (!validateCoordinates(row, column)) {
+        throw std::runtime_error(
+            "Invalid coordinates when trying to get block value!");
+    }
+
     if (!isBlockVisible(row, column)) {
         throw std::runtime_error("Block is not visible!");
     }
@@ -131,6 +154,10 @@ int Field::getBlockValue(int row, int column) {
  * Actions
  */
 void Field::flagBlock(int row, int column) {
+    if (!validateCoordinates(row, column)) {
+        return;
+    }
+
     if (isBlockVisible(row, column)) {
         throw std::runtime_error("Block is visible!");
     }
@@ -139,5 +166,9 @@ void Field::flagBlock(int row, int column) {
 }
 
 void Field::revealBlock(int row, int column) {
+    if (!validateCoordinates(row, column)) {
+        return;
+    }
+
     visibility.at(row).at(column) = 1;
 }

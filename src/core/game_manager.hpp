@@ -1,22 +1,18 @@
 #pragma once
 #include "../ui/user_interface.hpp"
+#include "difficulty.hpp"
 #include "game.hpp"
 #include <memory>
 
 class GameManager {
     std::unique_ptr<Game> gameInstance;
-    UserInterface *interface;
 
   public:
-    explicit GameManager(UserInterface *interface);
+    void startGame(Difficulty difficulty);
+    Game *getGameInstance();
 
-    bool shouldStartNewGame();
-    void startGame();
-
-    GameAction readGameAction();
-    void performGameAction(GameAction action);
+    void performGameAction(GameAction action, int row, int column);
 
     bool isGameOver();
-    void showGameOver();
     void stopGame();
 };
