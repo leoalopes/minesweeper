@@ -8,26 +8,31 @@ Minesweeper game made with C++ that can be played in the terminal
 
 ## Building
 
-The project uses CMake to create a `core` and `ui` library from their respective folders and link them together with the `main.cpp` file.
+The project structure is divided in `core` and `app`.
 
-You can build it by using the 3-line script that will clean the build directory and use CMake to build everything
+The `core` library has the main classes that will manage the game and provides an api to perform game actions.
+
+The app has the cli interface class, with methods to interact with I/O, and the main file which uses the `core` library and cli class to run the actual game.
+
+Each folder has their own CMakeLists to build that piece of code. You can build it by using the 3-line script that will clean the build directory and build everything at once
 
 ```
 ./build.sh
 ```
 
-The binary file will be at the root of the build directory and can be run like this
+The binary file will be at the `app` folder in the build directory. It can be run like this
 
 ```
-./build/minesweeper
+./build/app/minesweeper
 ```
 
 ## Libraries
 
-The code is separated in the `core` and `ui` libraries. This is to organize what is part of the core game mechanics from what will deal with I/O operations to get data from the player.
+The `core` library should include everything necessary for the game to run, without including any I/O operation. It exposes a class `GameManager` that can be used to perform all game actions.
 
-The `ui` library was coded based on a main abstract class to allow for adding new UI handlers in the future, like mouse support or a full GUI, and just be a plug n play change.
-Since CLI and GUI work very differently, it might not be that simple, but having the code separated will make it easier.
+The app instantiates a `GameManager` and has the responsibility to deal with all I/O and be the bridge between the player and the game.
+
+The current app is configured to use a CLI, but in the future we can reuse the same core library to create a GUI app, for example, allowing the `core` library to be multi-purpose and interface agnostic.
 
 ## Linter
 
