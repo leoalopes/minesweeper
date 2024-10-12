@@ -1,4 +1,6 @@
-file(GLOB core_files "src/*.cpp")
-add_library(core SHARED ${core_files})
+cmake_minimum_required(VERSION 3.24)
 
-target_include_directories(core PUBLIC src)
+file(GLOB CORE_FILES "src/*.cpp")
+add_library(core SHARED ${CORE_FILES})
+
+target_include_directories(core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)

@@ -1,8 +1,8 @@
 #pragma once
-#include "../../../core/src/difficulty.hpp"
-#include "../../../core/src/game.hpp"
-#include "../../../core/src/game_manager.hpp"
 #include <array>
+#include <core/difficulty.hpp>
+#include <core/game.hpp>
+#include <core/game_manager.hpp>
 #include <string>
 
 class Cli {

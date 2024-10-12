@@ -1,4 +1,4 @@
-#include "difficulty.hpp"
+#include "core/difficulty.hpp"
 
 DifficultyOptions::DifficultyOptions(Difficulty difficulty) {
     switch (difficulty) {

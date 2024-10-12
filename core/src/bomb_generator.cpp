@@ -1,4 +1,4 @@
-#include "bomb_generator.hpp"
+#include "core/bomb_generator.hpp"
 #include <random>
 
 // Disable warning about the random seed being predictable

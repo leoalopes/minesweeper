@@ -1,6 +1,6 @@
-#include "game.hpp"
-#include "difficulty.hpp"
-#include "field.hpp"
+#include "core/game.hpp"
+#include "core/difficulty.hpp"
+#include "core/field.hpp"
 #include <memory>
 #include <stdexcept>
 

@@ -1,6 +1,6 @@
-#include "game_manager.hpp"
-#include "difficulty.hpp"
-#include "game.hpp"
+#include "core/game_manager.hpp"
+#include "core/difficulty.hpp"
+#include "core/game.hpp"
 #include <memory>
 #include <stdexcept>
 

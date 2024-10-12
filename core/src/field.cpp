@@ -1,6 +1,6 @@
-#include "field.hpp"
-#include "bomb_generator.hpp"
-#include "difficulty.hpp"
+#include "core/field.hpp"
+#include "core/bomb_generator.hpp"
+#include "core/difficulty.hpp"
 #include <cstdlib>
 #include <stdexcept>
 

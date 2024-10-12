@@ -1,9 +1,9 @@
 #include "cli.hpp"
-#include "../../../core/src/difficulty.hpp"
-#include "../../../core/src/field.hpp"
-#include "../../../core/src/game.hpp"
-#include "../../../core/src/game_manager.hpp"
 #include <array>
+#include <core/difficulty.hpp>
+#include <core/field.hpp>
+#include <core/game.hpp>
+#include <core/game_manager.hpp>
 #include <cstddef>
 #include <iostream>
 #include <stdexcept>
