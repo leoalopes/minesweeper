@@ -4,7 +4,7 @@
 while [[ $# -gt 0 ]]; do
 	case $1 in
 	--clean)
-		export CLEAN_BUILD=1
+		export CLEAN=1
 		shift
 		;;
 	-* | --*)
@@ -18,7 +18,7 @@ while [[ $# -gt 0 ]]; do
 	esac
 done
 
-if [ -n "$CLEAN_BUILD" ]; then
+if [ -n "$CLEAN" ]; then
 	rm -rf build
 fi
 

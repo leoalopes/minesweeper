@@ -8,7 +8,7 @@ while [[ $# -gt 0 ]]; do
 		shift
 		;;
 	--clean)
-		export CLEAN_BUILD=1
+		export CLEAN=1
 		shift
 		;;
 	-* | --*)
@@ -23,7 +23,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [ -n "$BUILD" ]; then
-	if [ -n "$CLEAN_BUILD" ]; then
+	if [ -n "$CLEAN" ]; then
 		./scripts/build.sh --clean
 	else
 		./scripts/build.sh
