@@ -7,9 +7,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_GENERATOR "Unix Makefiles")
-set(CMAKE_C_COMPILER "gcc")
-set(CMAKE_CXX_COMPILER "g++")
+set(CMAKE_C_COMPILER "/bin/gcc")
+set(CMAKE_CXX_COMPILER "/bin/c++")
 set(CMAKE_CXX_CLANG_TIDY "clang-tidy")
+
+enable_testing()
 
 add_subdirectory(core)
 add_subdirectory(app)
